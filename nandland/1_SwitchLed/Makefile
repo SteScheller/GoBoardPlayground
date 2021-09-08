@@ -25,7 +25,7 @@ $(BUILD_DIR):
 $(BUILD_DIR)/$(TARGET).bin: $(BUILD_DIR)
 	@echo synthesizing netlist...
 	@echo
-	$(SYNTH) -p "synth_ice40 -top $(TOP_rODULE) -json $(BUILD_DIR)/$(TARGET).json" $(SOURCES)
+	$(SYNTH) -p "synth_ice40 -top $(TOP_MODULE) -json $(BUILD_DIR)/$(TARGET).json" $(SOURCES)
 	@echo
 	@echo --------------------------------------------------------------------------------
 	@echo place and route...
