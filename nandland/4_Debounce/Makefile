@@ -21,7 +21,7 @@ $(BUILD_DIR):
 	@echo Creating build directory...
 	@mkdir -p $(BUILD_DIR)
 
-$(BUILD_DIR)/$(TARGET).bin: $(BUILD_DIR)
+$(BUILD_DIR)/$(TARGET).bin: $(BUILD_DIR) $(SOURCES)
 	@echo synthesizing netlist...
 	@echo
 	$(SYNTH) -p "synth_ice40 -top $(TOP_MODULE) -json $(BUILD_DIR)/$(TARGET).json" $(SOURCES)

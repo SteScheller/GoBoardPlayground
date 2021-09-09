@@ -34,10 +34,10 @@ module Debounce_Project_Top
     reg r_sw2 = 1'b0;
     reg r_sw3 = 1'b0;
     reg r_sw4 = 1'b0;
-    reg w_sw1;
-    reg w_sw2;
-    reg w_sw3;
-    reg w_sw4;
+    wire w_sw1;
+    wire w_sw2;
+    wire w_sw3;
+    wire w_sw4;
 
     // instantiate debounce modules
     Debounce_Switch debounce_sw1
