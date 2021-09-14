@@ -1,2 +1,7 @@
 ice-build/
 out/
+**_Implmnt/
+stdout.log
+stdout.log.bak
+synlog.tcl
+
