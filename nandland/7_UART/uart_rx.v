@@ -21,8 +21,8 @@ module UART_Rx
     reg [NUM_DATA_BITS - 1:0] r_rxByte = 0;
     reg [2:0] r_smState = RESET;
     reg r_rxcFlag = 0;
-    reg r_bitIdx = 0;
-    reg r_clkCount = 0;
+    reg [3:0] r_bitIdx = 0;
+    reg [15:0] r_clkCount = 0;
 
     always @(posedge i_clk)
     begin
