@@ -7,7 +7,9 @@ module UART_Rx
 (
     input i_clk,
     input i_rx,
-    output o_rxcFlag,
+    input i_reset,
+    output o_rxStrobe,
+    output o_errorFlag,
     output [NUM_DATA_BITS - 1:0] o_rxByte
 );
 
@@ -20,18 +22,29 @@ module UART_Rx
 
     reg [NUM_DATA_BITS - 1:0] r_rxByte = 0;
     reg [2:0] r_smState = RESET;
-    reg r_rxcFlag = 0;
+    reg r_rxStrobe = 0;
+    reg r_errorFlag = 0;
     reg [3:0] r_bitIdx = 0;
     reg [15:0] r_clkCount = 0;
 
-    always @(posedge i_clk)
+    always @(posedge i_clk or i_reset)
+    if (i_reset)
     begin
+        r_rxStrobe = 0;
+        r_errorFlag = 0;
+        r_rxByte = 0;
+        r_smState = RESET;
+        r_bitIdx = 0;
+        r_clkCount = 0;
+    end
+    else
+    begin
+        r_rxStrobe <= 0;
         case (r_smState)
             RESET:
             begin
-                r_bitIdx <= 0;
-                r_rxcFlag <= 0;
                 r_clkCount <= 0;
+                r_bitIdx <= 0;
                 r_smState <= IDLE;
             end
 
@@ -78,24 +91,23 @@ module UART_Rx
                     r_clkCount <= r_clkCount + 1;
                 else
                     if (i_rx == 1'b1)
-                        r_rxcFlag <= 1;
+                        r_rxStrobe <= 1;
                     r_smState <= RESET;
+                    r_errorFlag <= 1;
             end
 
             default:
-                r_smState <= RESET;
-            RESET:
             begin
-                r_bitIdx <= 0;
-                r_rxcFlag <= 0;
-                r_clkCount <= 0;
-                r_smState <= IDLE;
+                r_smState <= RESET;
+                r_errorFlag <= 1;
             end
+                
 
         endcase
     end
 
-    assign o_rxcFlag = r_rxcFlag;
+    assign o_rxStrobe = r_rxStrobe;
+    assign o_errorFlag = r_errorFlag;
     assign o_rxByte = r_rxByte;
 
 endmodule

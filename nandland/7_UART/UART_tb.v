@@ -50,8 +50,10 @@ module UART_Rx_Tb();
       .NUM_DATA_BITS(8)
   ) UART_Rx_INST
     (.i_clk(r_Clock),
+     .i_reset(0),
      .i_rx(r_RX_Serial),
-     .o_rxcFlag(),
+     .o_rxStrobe(),
+     .o_errorFlag(),
      .o_rxByte(w_RX_Byte)
      );
   
