@@ -27,7 +27,7 @@ module UART_Rx
     reg [3:0] r_bitIdx = 0;
     reg [15:0] r_clkCount = 0;
 
-    always @(posedge i_clk or i_reset)
+    always @(posedge i_clk, posedge i_reset)
     if (i_reset)
     begin
         r_rxStrobe = 0;
