@@ -3,7 +3,7 @@
 #
 
 PROJECT_NAME = UART
-SOURCES = uart_top.v uart_rx.v seven_segment_decoder.v
+SOURCES = uart_top.v uart_rx.v uart_tx.v seven_segment_decoder.v
 
 BUILD_DIR = out
 
