@@ -4,7 +4,7 @@
 
 // This testbench will exercise the UART RX.
 // It sends out byte 0x37, and ensures the RX receives it correctly.
-`timescale 1ns/10ps
+`timescale 1ns/1ns
 
 module UART_Rx_TB();
 
@@ -74,7 +74,6 @@ module UART_Rx_TB();
         $display("Rx Test Passed");
       else
         $display("Rx Test Failed");
-    $finish();
     end
 
 endmodule
@@ -87,7 +86,6 @@ module UART_Tx_TB ();
   // 25000000 / 115200 = 217 Clocks Per Bit.
   parameter c_CLOCK_PERIOD_NS = 40;
   parameter c_CLKS_PER_BIT    = 217;
-  parameter c_BIT_PERIOD      = 8600;
 
   reg r_Clock = 0;
   reg r_TX_DV = 0;
@@ -109,7 +107,7 @@ module UART_Tx_TB ();
      .o_rxByte(w_RX_Byte)
      );
 
-  UART_Tx #(.CLKS_PER_BIT(c_CLKS_PER_BIT)) UART_TX_Inst
+  UART_Tx #(.CLKS_PER_BIT(c_CLKS_PER_BIT)) UART_TX_INST
     (.i_clk(r_Clock),
      .i_txStart(r_TX_DV),
      .i_txByte(r_TX_Byte),
@@ -144,7 +142,6 @@ module UART_Tx_TB ();
         $display("Tx Test Passed");
       else
         $display("Tx Test Failed");
-      $finish();
     end
 
 endmodule
@@ -164,6 +161,11 @@ begin
     // Required to dump signals to EPWave
     $dumpfile("dump.vcd");
     $dumpvars(0);
+
+    #200_000;
+
+    $display("Stopped Simulation");
+    $finish();
 end
 
 endmodule

@@ -26,16 +26,17 @@ module UART_Rx
     reg r_errorFlag = 0;
     reg [3:0] r_bitIdx = 0;
     reg [15:0] r_clkCount = 0;
+    reg [15:0] r_sampleCount = CLKS_PER_BIT >> 1;
 
     always @(posedge i_clk, posedge i_reset)
     if (i_reset)
     begin
-        r_rxStrobe = 0;
-        r_errorFlag = 0;
-        r_rxByte = 0;
-        r_smState = RESET;
-        r_bitIdx = 0;
-        r_clkCount = 0;
+        r_rxStrobe <= 0;
+        r_errorFlag <= 0;
+        r_rxByte <= 0;
+        r_smState <= RESET;
+        r_bitIdx <= 0;
+        r_clkCount <= 0;
     end
     else
     begin
@@ -58,26 +59,32 @@ module UART_Rx
             START_BIT:
             begin
                 if (r_clkCount < CLKS_PER_BIT - 1)
-                    r_clkCount <= r_clkCount + 1;
-                else
                 begin
-                    if (i_rx == 1'b0)
+                    r_clkCount <= r_clkCount + 1;
+                    // check if start bit is still low
+                    if ((r_clkCount == r_sampleCount) && (i_rx != 1'b0))
                     begin
-                        r_smState <= DATA_BITS;
+                        r_smState <= IDLE;
                         r_clkCount <= 0;
                     end
-                    else
-                        r_smState <= RESET;
+                end
+                else
+                begin
+                    r_smState <= DATA_BITS;
+                    r_clkCount <= 0;
                 end
             end
 
             DATA_BITS:
             begin
                 if (r_clkCount < CLKS_PER_BIT - 1)
+                begin
                     r_clkCount <= r_clkCount + 1;
+                    if (r_clkCount == r_sampleCount)
+                        r_rxByte[r_bitIdx] <= i_rx;
+                end
                 else
                 begin
-                    r_rxByte[r_bitIdx] <= i_rx;
                     r_clkCount <= 0;
                     r_bitIdx <= r_bitIdx + 1;
                     if (r_bitIdx == NUM_DATA_BITS - 1)
@@ -88,12 +95,18 @@ module UART_Rx
             STOP_BIT:
             begin
                 if (r_clkCount < CLKS_PER_BIT - 1)
+                begin
                     r_clkCount <= r_clkCount + 1;
+                    // check for correct stop bit
+                    if ((r_clkCount == r_sampleCount) && (i_rx != 1'b1))
+                        r_errorFlag <= 1;
+                end
                 else
-                    if (i_rx == 1'b1)
+                begin
+                    if (!r_errorFlag)
                         r_rxStrobe <= 1;
                     r_smState <= RESET;
-                    r_errorFlag <= 1;
+                end
             end
 
             default:
