@@ -26,7 +26,7 @@ $(OUT):
 	@echo Creating build directory...
 	@mkdir -p $(OUT)
 
-$(OUT)/$(NAME).bin: $(OUT) $(SOURCES)
+$(OUT)/$(NAME).bin: $(OUT) $(SOURCES) constraints.pcf
 	@echo synthesizing netlist...
 	@echo
 	$(SYNTH) -p "synth_ice40 -top $(NAME)_TLM -json $(OUT)/$(NAME).json" $(SOURCES)
