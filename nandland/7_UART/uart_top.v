@@ -1,8 +1,10 @@
 `default_nettype none
 
-module UART_Top
+module UART_TLM
 (
     input i_clk,
+    input i_uartRx,
+    output o_uartTx,
     output o_seg1a,
     output o_seg1b,
     output o_seg1c,
@@ -20,7 +22,6 @@ module UART_Top
 
 );
 
-    reg [7:0] r_count = 8'h42;
     wire w_seg1a;
     wire w_seg1b;
     wire w_seg1c;
@@ -36,11 +37,56 @@ module UART_Top
     wire w_seg2f;
     wire w_seg2g;
 
+    wire w_rxStrobe;
+    wire [7:0] w_rxByte;
+    reg [7:0] r_rxByte = 8'h00;
+
+    reg r_txStart = 1'b0;
+
+    UART_Rx 
+    #(
+        .CLKS_PER_BIT(217),
+        .NUM_DATA_BITS(8)
+    ) UART_RX_INST
+    (
+        .i_clk(i_clk),
+        .i_reset(1'b0),
+        .i_rx(i_uartRx),
+        .o_rxStrobe(w_rxStrobe),
+        .o_errorFlag(),
+        .o_rxByte(w_rxByte)
+    );
+
+    UART_Tx 
+    #(
+        .CLKS_PER_BIT(217),
+        .NUM_DATA_BITS(8)
+    ) UART_TX_INST
+    (
+        .i_clk(i_clk),
+        .i_txStart(r_txStart),
+        .i_txByte(r_rxByte),
+        .i_reset(1'b0),
+        .o_tx(o_uartTx),
+        .o_txActive(),
+        .o_txDoneStrobe(),
+        .o_errorFlag()
+    );
+
+    always @(posedge i_clk)
+    begin
+        r_txStart <= 1'b0;
+        if (w_rxStrobe == 1'b1)
+        begin
+            r_rxByte <= w_rxByte;
+            r_txStart <= 1'b1;
+        end
+    end
 
     // instantiate seven segment display decoders
     Seven_Segment_Decoder seg1
     (
-        .i_value(r_count[7:4]),
+        .i_value(r_rxByte[7:4]),
         .i_clk(i_clk),
         .o_segA(w_seg1a),
         .o_segB(w_seg1b),
@@ -52,7 +98,7 @@ module UART_Top
     );
     Seven_Segment_Decoder seg2
     (
-        .i_value(r_count[3:0]),
+        .i_value(r_rxByte[3:0]),
         .i_clk(i_clk),
         .o_segA(w_seg2a),
         .o_segB(w_seg2b),
