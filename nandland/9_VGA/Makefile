@@ -3,7 +3,7 @@
 #
 
 PROJECT_NAME = VGA
-SOURCES = VGA_top.v uart_rx.v uart_tx.v seven_segment_decoder.v
+SOURCES = VGA_top.v vga_hs_vs.v uart_rx.v uart_tx.v seven_segment_decoder.v
 
 BUILD_DIR = out
 
@@ -52,7 +52,7 @@ flash: $(OUT)/$(NAME).bin
 $(OUT)/$(NAME).out: $(NAME)_tb.v $(SOURCES)
 	@echo translating verilog source...
 	@echo
-	$(VERILOG_SIMULATOR) $(NAME)_tb.v $(SOURCES) -o $(OUT)/$(NAME).out
+	$(VERILOG_SIMULATOR) -s $(NAME)_TB $(NAME)_tb.v $(SOURCES) -o $(OUT)/$(NAME).out
 
 verilog_sim: $(OUT)/$(NAME).out
 	@echo simulating verilog testbench...

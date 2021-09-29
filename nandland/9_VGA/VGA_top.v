@@ -18,8 +18,9 @@ module VGA_TLM
     output o_seg2d,
     output o_seg2e,
     output o_seg2f,
-    output o_seg2g
-
+    output o_seg2g,
+    output o_vgaHSync,
+    output o_vgaVSync
 );
 
     wire w_seg1a;
@@ -124,6 +125,24 @@ module VGA_TLM
     assign o_seg2e = ~w_seg2e;
     assign o_seg2f = ~w_seg2f;
     assign o_seg2g = ~w_seg2g;
+
+    // instantiate vga sync generator
+    wire w_hs;
+    wire w_vs;
+
+    VGA_HS_VS vgaHsVs
+    (
+        .i_clk(i_clk),
+        .i_reset(1'b0),
+        .o_hs(w_hs),
+        .o_vs(w_vs),
+        .o_activeArea(),
+        .o_px(),
+        .o_py()
+    );
+    
+    assign o_vgaHSync = w_hs;
+    assign o_vgaVSync = w_vs;
 
 endmodule
 
