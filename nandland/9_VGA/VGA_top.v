@@ -20,7 +20,16 @@ module VGA_TLM
     output o_seg2f,
     output o_seg2g,
     output o_vgaHSync,
-    output o_vgaVSync
+    output o_vgaVSync,
+    output o_vgaR0,
+    output o_vgaR1,
+    output o_vgaR2,
+    output o_vgaG0,
+    output o_vgaG1,
+    output o_vgaG2,
+    output o_vgaB0,
+    output o_vgaB1,
+    output o_vgaB2
 );
 
     wire w_seg1a;
@@ -129,6 +138,9 @@ module VGA_TLM
     // instantiate vga sync generator
     wire w_hs;
     wire w_vs;
+    wire w_activeArea;
+    wire [9:0] w_px;
+    wire [9:0] w_py;
 
     VGA_HS_VS vgaHsVs
     (
@@ -136,13 +148,57 @@ module VGA_TLM
         .i_reset(1'b0),
         .o_hs(w_hs),
         .o_vs(w_vs),
-        .o_activeArea(),
-        .o_px(),
-        .o_py()
+        .o_activeArea(w_activeArea),
+        .o_px(w_px),
+        .o_py(w_py)
     );
-    
+
     assign o_vgaHSync = w_hs;
     assign o_vgaVSync = w_vs;
+    
+    // generate testpattern
+    wire [2:0] w_red;
+    wire [2:0] w_green;
+    wire [2:0] w_blue;
+    reg [2:0] r_red = 0;
+    reg [2:0] r_green = 0;
+    reg [2:0] r_blue = 0;
+    VGA_PSYCHEDELIC_PATTERN vgaPattern
+    (
+        .i_clk(i_clk),
+        .i_reset(1'b0),
+        .i_px(w_px),
+        .i_py(w_py),
+        .o_red(w_red),
+        .o_green(w_green),
+        .o_blue(w_blue)
+    );
+
+    always @(posedge i_clk)
+    begin
+        if (w_activeArea == 1'b1)
+        begin
+            r_red <= w_red;
+            r_green <= w_green;
+            r_blue <= w_blue;
+        end
+        else
+        begin
+            r_red <= 3'b0;
+            r_green <= 3'b0;
+            r_blue <= 3'b0;
+        end
+    end
+    
+    assign o_vgaR0 = r_red[0];
+    assign o_vgaR1 = r_red[1];
+    assign o_vgaR2 = r_red[2];
+    assign o_vgaG0 = r_green[0];
+    assign o_vgaG1 = r_green[1];
+    assign o_vgaG2 = r_green[2];
+    assign o_vgaB0 = r_blue[0];
+    assign o_vgaB1 = r_blue[1];
+    assign o_vgaB2 = r_blue[2];
 
 endmodule
 

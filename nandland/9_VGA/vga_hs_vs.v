@@ -32,6 +32,8 @@ module VGA_HS_VS
     reg r_hs = 1'b0;
     reg r_vs = 1'b0;
     reg r_activeArea = 1'b0;
+    reg r_hActive = 1'b0;
+    reg r_vActive = 1'b0;
     reg [9:0] r_px = 0;
     reg [9:0] r_py = 0;
 
@@ -45,6 +47,8 @@ module VGA_HS_VS
         r_hs <= 1'b0;
         r_vs <= 1'b0;
         r_activeArea <= 1'b0;
+        r_hActive <= 1'b0;
+        r_vActive <= 1'b0;
         r_px <= 0;
         r_py <= 0;
     end
@@ -90,14 +94,28 @@ module VGA_HS_VS
 
         // compute pixel coordinates
         if ((r_hCnt >= (H_SYNC + H_BACK_PORCH)) && (r_hCnt < (H_TOTAL - H_FRONT_PORCH)))
+        begin
             r_px <= r_hCnt - H_SYNC - H_BACK_PORCH;
+            r_hActive <= 1'b1;
+        end
         else
+        begin
             r_px <= 0;
+            r_hActive <= 1'b0;
+        end
 
         if ((r_vCnt >= (V_SYNC + V_BACK_PORCH)) && (r_vCnt < (V_TOTAL - V_FRONT_PORCH)))
+        begin
             r_py <= r_vCnt - V_SYNC - V_BACK_PORCH;
+            r_vActive <= 1'b1;
+        end
         else
+        begin
             r_py <= 0;
+            r_vActive <= 1'b0;
+        end
+
+        r_activeArea = r_hActive & r_vActive;
     end
 
     assign o_activeArea = r_activeArea;

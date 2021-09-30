@@ -16,16 +16,16 @@
 set_io i_clk 15
 
 ### LED Pins:
-set_io o_led1 56
-set_io o_led2 57
-set_io o_led3 59
-set_io o_led4 60
+#set_io o_led1 56
+#set_io o_led2 57
+#set_io o_led3 59
+#set_io o_led4 60
 
 ## Push-Button Switches
-set_io i_sw1 53
-set_io i_sw2 51
-set_io i_sw3 54
-set_io i_sw4 52
+#set_io i_sw1 53
+#set_io i_sw2 51
+#set_io i_sw3 54
+#set_io i_sw4 52
 
 ### 7 Segment Outputs
 set_io o_seg1a 3
@@ -61,11 +61,11 @@ set_io o_vgaB1 41
 set_io o_vgaB2 42
 
 ## PMOD Signals
-set_io io_pmod1 65
-set_io io_pmod2 64
-set_io io_pmod3 63
-set_io io_pmod4 62
-set_io io_pmod7 78
-set_io io_pmod8 79
-set_io io_pmod9 80
-set_io io_pmod10 81
+#set_io io_pmod1 65
+#set_io io_pmod2 64
+#set_io io_pmod3 63
+#set_io io_pmod4 62
+#set_io io_pmod7 78
+#set_io io_pmod8 79
+#set_io io_pmod9 80
+#set_io io_pmod10 81

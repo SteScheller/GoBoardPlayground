@@ -3,7 +3,7 @@
 #
 
 PROJECT_NAME = VGA
-SOURCES = VGA_top.v vga_hs_vs.v uart_rx.v uart_tx.v seven_segment_decoder.v
+SOURCES = VGA_top.v vga_hs_vs.v vga_patterns.v uart_rx.v uart_tx.v seven_segment_decoder.v
 
 BUILD_DIR = out
 
