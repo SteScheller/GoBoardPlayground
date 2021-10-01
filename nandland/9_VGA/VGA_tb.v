@@ -74,7 +74,7 @@ module VGA_TB ();
         $dumpfile("dump.vcd");
         $dumpvars(0);
 
-        #200_000;
+        #400_000;
 
         $display("Stopped Simulation");
         $finish();

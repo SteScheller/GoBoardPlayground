@@ -77,20 +77,8 @@ module VGA_HS_VS
 
 
         // infer horizontal and vertical sync pulses
-        if (r_hCnt < H_SYNC)
-            r_hs <= 1'b1;
-        else if ((r_hCnt >= (H_SYNC + H_BACK_PORCH)) && (r_hCnt < (H_TOTAL - H_FRONT_PORCH)))
-            r_hs <= 1'b1;
-        else
-            r_hs <= 1'b0;
-
-        if (r_vCnt < V_SYNC)
-            r_vs <= 1'b1;
-        else if ((r_vCnt >= (V_SYNC + V_BACK_PORCH)) && (r_vCnt < (V_TOTAL - V_FRONT_PORCH)))
-            r_vs <= 1'b1;
-        else
-            r_vs <= 1'b0;
-
+        r_hs <= (r_hCnt < H_SYNC) ? 1'b0 : 1'b1;
+        r_vs <= (r_vCnt < V_SYNC) ? 1'b0 : 1'b1;
 
         // compute pixel coordinates
         if ((r_hCnt >= (H_SYNC + H_BACK_PORCH)) && (r_hCnt < (H_TOTAL - H_FRONT_PORCH)))

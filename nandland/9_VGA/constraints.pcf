@@ -16,16 +16,16 @@
 set_io i_clk 15
 
 ### LED Pins:
-#set_io o_led1 56
-#set_io o_led2 57
-#set_io o_led3 59
-#set_io o_led4 60
+set_io o_led1 56
+set_io o_led2 57
+set_io o_led3 59
+set_io o_led4 60
 
 ## Push-Button Switches
-#set_io i_sw1 53
-#set_io i_sw2 51
-#set_io i_sw3 54
-#set_io i_sw4 52
+set_io i_sw1 53
+set_io i_sw2 51
+set_io i_sw3 54
+set_io i_sw4 52
 
 ### 7 Segment Outputs
 set_io o_seg1a 3
